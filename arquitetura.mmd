@@ -1,0 +1,85 @@
+---
+config:
+  layout: elk
+---
+flowchart TB
+ subgraph SOURCES["🔵 DATA SOURCES"]
+        S1["Sistemas Transacionais<br>OLTP"]
+        S2["APIs e Web Services"]
+        S3["Streaming em<br>Tempo Real"]
+        S4["Arquivos e Logs"]
+        S5["Dados Não<br>Estruturados"]
+  end
+ subgraph INGESTION["🟢 CAMADA: INGESTÃO"]
+        IB["Ingestão em Batch"]
+        IS["Ingestão em Streaming"]
+  end
+ subgraph BRONZE["Zona Bronze - Raw"]
+        B1["Dados Brutos"]
+        B2["Formato Original"]
+        B3["Auditoria Completa"]
+  end
+ subgraph SILVER["Zona Silver - Refined"]
+        SL1["Dados Limpos"]
+        SL2["Validados"]
+        SL3["Padronizados"]
+  end
+ subgraph GOLD["Zona Gold - Curated"]
+        G1["Dados Agregados"]
+        G2["Modelados"]
+        G3["Prontos para Negócio"]
+  end
+ subgraph STORAGE["🟡 CAMADA:ARMAZENAMENTO-ARQUITETURA MEDALHÃO"]
+        BRONZE
+        SILVER
+        GOLD
+  end
+ subgraph PROCESSING["🟣 CAMADA: PROCESSAMENTO"]
+        P1["Motor de Processamento<br>Distribuído"]
+        P2["Transformações e<br>Limpeza"]
+        P3["Enriquecimento<br>de Dados"]
+        P4["Jobs ETL/ELT"]
+  end
+ subgraph GOVERNANCE["🔴 CAMADA: GOVERNANÇA E SEGURANÇA"]
+        GOV1["Catálogo de<br>Metadados"]
+        GOV2["Linhagem de Dados"]
+        GOV3["Controle de Acesso"]
+        GOV4["Criptografia e<br>Compliance"]
+        GOV5["Qualidade de Dados"]
+  end
+ subgraph CONSUMPTION["🟠 CAMADA: CONSUMO E EXPOSIÇÃO"]
+        C1["Ferramentas de BI<br>e Visualização"]
+        C2["Data Science e ML"]
+        C3["APIs de Dados"]
+        C4["Aplicações Analíticas"]
+        C5["Consultas Ad-hoc"]
+  end
+    S1 --> I1["I1"]
+    S2 --> I1
+    S3 --> I2["I2"]
+    S4 --> I1
+    S5 --> I1
+    B1 --> B2
+    B2 --> B3
+    GOV3 --> C1
+    P2 --> SILVER
+    BRONZE --> P4
+    P4 --> P2
+    P1 --> P3
+    P3 --> GOLD
+    SILVER --> P1
+    IB --> n1["Event"]
+    n1 --> BRONZE
+    IS -.-> BRONZE
+    I1 --> IB
+    I2 --> IS
+    GOLD --> CONSUMPTION
+    GOV2 --> STORAGE
+    GOV5 --> PROCESSING
+    GOV4 --> STORAGE
+    GOV1 --> CONSUMPTION & STORAGE
+    SILVER -.-> C5 & C2
+
+    n1@{ shape: event}
+    classDef Aqua stroke-width:1px, stroke-dasharray:none, stroke:#46EDC8, fill:#DEFFF8, color:#378E7A
+    style GOV1 fill:transparent
