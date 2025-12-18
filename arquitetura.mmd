@@ -29,10 +29,16 @@ flowchart TB
         G2["Modelados"]
         G3["Prontos para Negócio"]
   end
- subgraph STORAGE["🟡 CAMADA:ARMAZENAMENTO-ARQUITETURA MEDALHÃO"]
+ subgraph STORAGE["🟡 CAMADA: ARMAZENAMENTO - ARQUITETURA MEDALHÃO"]
         BRONZE
         SILVER
         GOLD
+  end
+ subgraph SANDBOX["🔷 CAMADA: SANDBOX"]
+        SB1["Ambiente Isolado<br>para Testes"]
+        SB2["Prototipagem de<br>Transformações"]
+        SB3["Validação de<br>Processamento"]
+        SB4["Experimentação<br>Segura"]
   end
  subgraph PROCESSING["🟣 CAMADA: PROCESSAMENTO"]
         P1["Motor de Processamento<br>Distribuído"]
@@ -54,6 +60,12 @@ flowchart TB
         C4["Aplicações Analíticas"]
         C5["Consultas Ad-hoc"]
   end
+
+  
+  subgraph " "
+     n2["Arquitetura Conceitual"]
+  end
+
     S1 --> I1["I1"]
     S2 --> I1
     S3 --> I2["I2"]
@@ -61,13 +73,13 @@ flowchart TB
     S5 --> I1
     B1 --> B2
     B2 --> B3
-    GOV3 --> C1
+    GOV3 --> C1 & SANDBOX
     P2 --> SILVER
-    BRONZE --> P4
+    BRONZE --> P4 & SB1
     P4 --> P2
     P1 --> P3
     P3 --> GOLD
-    SILVER --> P1
+    SILVER --> P1 & SB2
     IB --> n1["Event"]
     n1 --> BRONZE
     IS -.-> BRONZE
@@ -75,11 +87,16 @@ flowchart TB
     I2 --> IS
     GOLD --> CONSUMPTION
     GOV2 --> STORAGE
-    GOV5 --> PROCESSING
+    GOV5 --> PROCESSING & SANDBOX
     GOV4 --> STORAGE
     GOV1 --> CONSUMPTION & STORAGE
     SILVER -.-> C5 & C2
+    SB2 --> SB3
+    SB3 --> SB4
+    SB4 -.-> PROCESSING & CONSUMPTION
+    
 
     n1@{ shape: event}
+    n2@{ img: "https://bilhalvadiego.github.io/arq_conceitual.png", h: 420, w: 420, pos: "b"}
     classDef Aqua stroke-width:1px, stroke-dasharray:none, stroke:#46EDC8, fill:#DEFFF8, color:#378E7A
     style GOV1 fill:transparent
